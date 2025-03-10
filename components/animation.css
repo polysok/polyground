@@ -1,0 +1,58 @@
+
+.animated-box {
+    --border-angle: 0deg;
+    border-radius: 12px;
+    animation: border-angle-rotate 2s infinite linear;
+    border: 2px solid transparent;
+    position: relative;
+
+    &.a {
+        background: linear-gradient(white, white) padding-box,
+        conic-gradient(
+                from var(--border-angle),
+                oklch(100% 100% 0deg),
+                oklch(100% 100% 45deg),
+                oklch(100% 100% 90deg),
+                oklch(100% 100% 135deg),
+                oklch(100% 100% 180deg),
+                oklch(100% 100% 225deg),
+                oklch(100% 100% 270deg),
+                oklch(100% 100% 315deg),
+                oklch(100% 100% 360deg)
+        )
+        border-box;
+    }
+
+}
+.loading-icon
+{
+    -webkit-animation:spin 2s linear infinite;
+    -moz-animation:spin 2s linear infinite;
+    animation:spin 2s linear infinite;
+}
+
+@-moz-keyframes spin {
+    100% { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform:rotate(360deg);
+    }
+}
+@keyframes border-angle-rotate {
+    from { --border-angle: 0deg; }
+    to { --border-angle: 360deg; }
+}
+
+
+
+@property --border-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+

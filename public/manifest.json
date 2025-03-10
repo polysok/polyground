@@ -1,0 +1,55 @@
+{
+    "name": "Polyground",
+    "short_name": "Polyground",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "orientation": "portrait",
+    "scope": "/polyground",
+    "start_url": "/polyground",
+    "icons": [
+        {
+            "src": "/polyground/favicon.ico",
+            "type": "image/x-icon",
+            "purpose": "any"
+        },
+        {
+            "src": "/polyground/icons/favicon-16x16.png",
+            "type": "image/png",
+            "sizes": "16x16",
+            "purpose": "any"
+        },
+        {
+            "src": "/polyground/icons/favicon-32x32.png",
+            "type": "image/png",
+            "sizes": "32x32",
+            "purpose": "any"
+        },
+        {
+            "src": "/polyground/icons/apple-touch-icon.png",
+            "type": "image/png",
+            "sizes": "180x180",
+            "purpose": "any"
+        },
+        {
+            "src": "/polyground//icons/android-chrome-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192",
+            "purpose": "any"
+        },
+        {
+            "src": "/polyground/icons/android-chrome-512x512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/polyground/screenshots/desktop.png",
+            "type": "image/png",
+            "alt": "Desktop"
+        }
+    ],
+    "splash_pages": null
+}
