@@ -11,15 +11,17 @@ import {Check, Eye, Paperclip, Pencil, X, LoaderCircleIcon} from "lucide-react";
 
 const OcrFileEdit = ({
                         url,
-                        selectedFile, 
+                        setUrl,
+                        selectedFile,
                         deleteFile,
                         handleFileChange
                     }:{
-                        url:string,
-                        selectedFile:File|null,
+                        url: string,
+                        setUrl: (url: string) => void,
+                        selectedFile: File|null,
                         deleteFile: () => void,
                         handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-}) => 
+}) =>
 {
     const [ocrResult, setOcrResult] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -32,16 +34,22 @@ const OcrFileEdit = ({
             setLoading(true);
             const fileReader = new FileReader();
             fileReader.onload = async () => {
-                const typedArray = new Uint8Array(fileReader.result as ArrayBuffer);
+                const result = fileReader.result;
+                if (!result) {
+                    setLoading(false);
+                    return;
+                }
+                const typedArray = new Uint8Array(result as ArrayBuffer);
                 const pdf = await pdfjs.getDocument(typedArray).promise;
                 const numPages = pdf.numPages;
-                var resultString: string = "";
-               
+                let resultString: string = "";
+
                 for (let i = 1; i <= numPages; i++) {
                     const page = await pdf.getPage(i);
                     const viewport = page.getViewport({ scale: 1.5 });
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
+                    if (!context) continue;
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
 
@@ -60,20 +68,18 @@ const OcrFileEdit = ({
             fileReader.readAsArrayBuffer(selectedFile);
         }
     };
-    
+
     return (
         <>
                 <div className="flex items-center">
-                    {/* url input */}
                     <input
                         type="text"
                         className="w-full p-1 sm:p-2 focus:ring-emerald-600 focus:ring-1 sm:focus:ring-2 rounded-lg border border-slate-200 focus:border-slate-200 dark:border-slate-700 dark:focus:border-slate-700 dark:bg-slate-900"
                         value={url}
-                        onChange={handleFileChange}
+                        onChange={(e) => setUrl(e.target.value)}
                         placeholder="Enter file URL here."
                         autoFocus={true}
                     />
-                    {/* file input */}
                     <label className="p-2 cursor-pointer">
                         <Paperclip
                             className="w-5 h-5 text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-300"/>
@@ -101,7 +107,6 @@ const OcrFileEdit = ({
                             <input type="hidden" id="ocrcontent" value={ocrResult}/>
                         </>
                     )}
-                    {/* delete button */}
                     <button
                         onClick={() => {
                             deleteFile();

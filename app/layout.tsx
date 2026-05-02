@@ -4,7 +4,6 @@ import "./inter/inter.css";
 import type { Viewport } from "next";
 import { Suspense } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
-import {CLASS} from "postcss-selector-parser";
 
 export const metadata: Metadata = {
   title: "Polyground",
@@ -33,8 +32,6 @@ export default function RootLayout({
             <Suspense>{children}</Suspense>
           </ThemeProvider>
         </main>
-      <div className="dark:hover:bg-slate-800"
-      ></div>
       </body>
     </html>
   );

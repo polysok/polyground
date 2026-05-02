@@ -12,7 +12,7 @@ const ImageEdit = ({
 }) => {
     const [editing, setEditing] = useState(url === "");
     useEffect(() => {
-        document.onpaste = (event: ClipboardEvent) => {
+        const handlePaste = (event: ClipboardEvent) => {
             const items = event.clipboardData?.items;
             if (!items) return;
             for (const index in items) {
@@ -23,12 +23,17 @@ const ImageEdit = ({
                     reader.onload = function (event) {
                         setUrl(event.target?.result as string);
                         setEditing(false);
-                    }; // data url!
+                    };
                     if (blob) {
                         reader.readAsDataURL(blob);
                     }
                 }
             }
+        };
+        const originalHandler = document.onpaste;
+        document.onpaste = handlePaste;
+        return () => {
+            document.onpaste = originalHandler;
         };
     }, [url, setUrl]);
     useEffect(() => {
@@ -45,7 +50,6 @@ const ImageEdit = ({
                             className="text-white z-50 bg-black p-4"
                             onClick={() => {
                                 setEditing(true);
-                                // setUrl("");
                             }}
                         >
                             <Pencil className="w-5 h-5"/>
@@ -64,7 +68,6 @@ const ImageEdit = ({
                 </div>
             ) : (
                 <div className="flex items-center">
-                    {/* url input */}
                     <input
                         type="text"
                         className="w-full p-1 sm:p-2 focus:ring-emerald-600 focus:ring-1 sm:focus:ring-2 rounded-lg border border-slate-200 focus:border-slate-200 dark:border-slate-700 dark:focus:border-slate-700 dark:bg-slate-900"
@@ -73,7 +76,6 @@ const ImageEdit = ({
                         placeholder="Enter image URL or paste image here."
                         autoFocus={true}
                     />
-                    {/* file input */}
                     <label className="p-2 cursor-pointer">
                         <Paperclip
                             className="w-5 h-5 text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-300"/>
@@ -82,7 +84,6 @@ const ImageEdit = ({
                             hidden={true}
                             onChange={(e) => {
                                 const file = e.target.files?.[0];
-                                // check file is (png, jpg, jpeg, webp, or gif)
                                 const validImageTypes = [
                                     "image/png",
                                     "image/jpeg",
@@ -91,7 +92,6 @@ const ImageEdit = ({
                                     "image/gif",
                                 ];
                                 if (file && validImageTypes.includes(file.type)) {
-                                    // create base64 data url
                                     const reader = new FileReader();
                                     reader.onload = function (event) {
                                         setUrl(event.target?.result as string);
@@ -112,7 +112,6 @@ const ImageEdit = ({
                             <Check className="w-5 h-5"/>
                         </button>
                     )}
-                    {/* delete button */}
                     <button
                         onClick={() => {
                             deleteImage();

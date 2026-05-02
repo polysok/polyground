@@ -84,7 +84,7 @@ const ChatMessage = ({
                 <ContentArea
                     alwaysFocus={isUserPromptMessage}
                     role={message.role}
-                    value={message.content}
+                    value={message.content as string}
                     onEnterPress={(e) => {
                         if (message.role === "user") {
                             if (e.shiftKey && e.key === "Enter") {
@@ -117,7 +117,7 @@ const ChatMessage = ({
                     </label>)
                 : (message.role === "system" &&
                     <div className="flex py-1">
-                        <OcrFileEdit url={url} selectedFile={selectedFile} deleteFile={deleteFile}
+                        <OcrFileEdit url={url} setUrl={setUrl} selectedFile={selectedFile} deleteFile={deleteFile}
                                      handleFileChange={handleFileChange}/>
                     </div>
                 )}
@@ -128,7 +128,7 @@ const ChatMessage = ({
                     <ul className="flex flex-col gap-4 py-2">
                         {message.tool_calls.map((toolCall, index) => (
                             <li
-                                key={index}
+                                key={toolCall.id || `tc-${index}`}
                                 className="flex flex-col ring ring-slate-200 rounded-lg group-hover:ring-slate-300 dark:group-hover:ring-slate-600 dark:ring-slate-700 bg-white dark:bg-slate-900 focus-within:group-hover:ring-emerald-600 focus-within:ring-emerald-600 focus-within:ring-1 sm:focus-within:ring-2 overflow-hidden dark:focus-within:ring-emerald-600 dark:group-hover:focus-within:ring-emerald-600"
                             >
                                 <div
@@ -246,7 +246,7 @@ const ChatMessage = ({
                 Array.isArray(message.content) && (
                     <ul className="flex flex-col w-full gap-4">
                         {message.content.map((item, index) => (
-                            <li key={index}>
+                            <li key={item.type + "-" + index}>
                                 {item.type === "text" ? (
                                     <ContentArea
                                         alwaysFocus={isUserPromptMessage}

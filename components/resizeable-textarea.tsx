@@ -1,12 +1,16 @@
 import React, {useEffect, useRef} from "react";
 
-const ResizeableTextarea = (props: any) => {
+interface ResizeableTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+    autoFocus?: boolean;
+}
+
+const ResizeableTextarea = ({autoFocus, ...props}: ResizeableTextareaProps) => {
     const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
     useEffect(() => {
-        if (textAreaRef.current && props.autoFocus) {
+        if (textAreaRef.current && autoFocus) {
             textAreaRef.current.focus();
         }
-    }, [textAreaRef, props.autoFocus]);
+    }, [autoFocus]);
     useEffect(() => {
         if (textAreaRef.current) {
             const target = textAreaRef.current;
@@ -14,7 +18,7 @@ const ResizeableTextarea = (props: any) => {
             const height = target.scrollHeight + 3;
             target.style.height = `${height}px`;
         }
-    });
+    }, [props.value]);
     return <textarea ref={textAreaRef} rows={1} {...props} />;
 };
 export default ResizeableTextarea;

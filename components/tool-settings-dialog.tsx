@@ -33,16 +33,21 @@ const ToolSettingsDialog = ({
     );
     const {theme} = useTheme();
     const saveToolSettings = () => {
-        const tools_parsed = currentTools.map((tool) => ({
-            type: "function" as const,
-            function: {
-                name: tool.name,
-                description: tool.description,
-                parameters: JSON.parse(tool.parameters),
-            },
-        }));
-        setTools(tools_parsed);
-        setSettingsOpen(false);
+        try {
+            const tools_parsed = currentTools.map((tool) => ({
+                type: "function" as const,
+                function: {
+                    name: tool.name,
+                    description: tool.description,
+                    parameters: JSON.parse(tool.parameters),
+                },
+            }));
+            setTools(tools_parsed);
+            setSettingsOpen(false);
+        } catch (error) {
+            console.error("Invalid JSON in tool parameters:", error);
+            alert("Invalid JSON in tool parameters. Please fix before saving.");
+        }
     };
     return (
         <Dialog
@@ -116,7 +121,7 @@ const ToolSettingsDialog = ({
                             <ul className="flex flex-col gap-2">
                                 {currentTools.map((tool, index) => (
                                     <li
-                                        key={index}
+                                        key={tool.name || `tool-${index}`}
                                         className="flex flex-col ring ring-slate-200 rounded-lg group-hover:ring-slate-300 dark:group-hover:ring-slate-600 dark:ring-slate-700 bg-white dark:bg-slate-900 focus-within:group-hover:ring-emerald-600 focus-within:ring-emerald-600 focus-within:ring-1 sm:focus-within:ring-2 overflow-hidden dark:focus-within:ring-emerald-600 dark:group-hover:focus-within:ring-emerald-600"
                                     >
                                         <div className="flex flex-col relative">

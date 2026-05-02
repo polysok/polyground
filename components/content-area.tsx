@@ -10,7 +10,7 @@ import {
 import remarkGfm from "remark-gfm";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
-import "katex/dist/katex.min.css"; // `rehype-katex` does not import the CSS for you
+import "katex/dist/katex.min.css";
 
 import {
     ChatCompletionRole
@@ -21,11 +21,9 @@ import React from "react";
 import {useTheme} from "next-themes";
 import ResizeableTextarea from "@/components/resizeable-textarea";
 import reactMarkdownComponents from "@/components/react-markdown-component";
-import OpenAI from "openai";
-import ChatCompletionContentPart = OpenAI.ChatCompletionContentPart;
 
 const ContentArea = ({
-                         role, // TODO: should probably just be placeholder
+                         role,
                          value,
                          onChange,
                          onEnterPress,
@@ -33,7 +31,7 @@ const ContentArea = ({
                          alwaysFocus = false,
                      }: {
     role: ChatCompletionRole;
-    value: string | ChatCompletionContentPart[] | undefined | null;
+    value: string | undefined | null;
     onChange: (value: string) => void;
     onEnterPress: (e: React.KeyboardEvent) => void;
     autoFocus?: boolean;
@@ -41,12 +39,13 @@ const ContentArea = ({
 }) => {
     const [editing, setEditing] = useState(autoFocus || false);
     const {theme} = useTheme();
-    
+    const stringValue = typeof value === "string" ? value : "";
+
     return (
         <>
             {role !== "assistant" ? (
                 <ResizeableTextarea
-                    value={value}
+                    value={stringValue}
                     onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
                         onEnterPress(e);
                     }}
@@ -62,10 +61,9 @@ const ContentArea = ({
                 />
             ) : (
                 <div
-                    
                     className="text-left p-1 px-2 sm:p-2 group-hover:bg-white dark:group-hover:bg-slate-900 rounded-lg cursor-text w-full border border-slate-200 focus:border-slate-200 dark:border-slate-700 dark:focus:border-slate-700 dark:bg-slate-900 bg-white"
                 >
-                    {value ? (
+                    {stringValue ? (
                         <Markdown
                             remarkPlugins={[remarkGfm, remarkMath]}
                             rehypePlugins={[rehypeKatex]}
@@ -74,7 +72,7 @@ const ContentArea = ({
                             )}
                             className="whitespace-pre-wrap overflow-x-auto flex flex-col gap-2"
                         >
-                            {value}
+                            {stringValue}
                         </Markdown>
                     ) : (
                         <div className="text-slate-400 dark:text-slate-500">
